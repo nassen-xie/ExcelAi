@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excel AI Assistant — DeepSeek &amp; AI in Excel</title>
+<meta name="description" content="Use DeepSeek, OpenAI, Claude and more directly in Excel: =AI() formulas, batch processing, chat pane. Bring your own API key. Free and open source.">
+<meta property="og:title" content="Excel AI Assistant">
+<meta property="og:description" content="=AI() formulas, batch processing and chat in Excel. DeepSeek first, bring your own API key. Open source (MIT).">
+<meta property="og:image" content="img/ai.png">
+<link rel="icon" type="image/png" href="img/ai-64.png">
+<style>
+:root{--blue:#2f7df6;--blue-d:#1d5fd0;--ink:#0f172a;--sub:#475569;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;--orange:#ff9800}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI","Yu Gothic UI","Hiragino Sans","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65}
+a{color:var(--blue-d)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:18px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink);text-decoration:none}
+.brand img{width:30px;height:30px}
+nav{margin-left:auto;display:flex;gap:18px;align-items:center;font-size:.92rem}
+nav a{color:var(--sub);text-decoration:none}
+nav a:hover{color:var(--blue-d)}
+.lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lang button{border:0;background:#fff;padding:5px 10px;cursor:pointer;font:inherit;font-size:.85rem;color:var(--sub)}
+.lang button[aria-pressed=true]{background:var(--blue);color:#fff}
+.hero{background:linear-gradient(135deg,#1e63e0 0%,#3b8bff 55%,#6cb2ff 100%);color:#fff;padding:72px 0 64px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.hero h1{font-size:2.6rem;line-height:1.2;margin:0 0 14px}
+.hero p{font-size:1.12rem;margin:0 0 24px;opacity:.95}
+.btn{display:inline-block;background:#fff;color:var(--blue-d);font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.7);box-shadow:none;margin-left:10px}
+.meta{margin-top:16px;font-size:.88rem;opacity:.9}
+.shot{background:#fff;border-radius:12px;padding:8px;box-shadow:0 18px 40px rgba(2,22,70,.35)}
+.shot img{display:block;width:100%;border-radius:6px}
+section{padding:64px 0}
+section h2{font-size:1.8rem;margin:0 0 8px}
+section .lead{color:var(--sub);margin:0 0 32px;max-width:720px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h3{margin:0 0 6px;font-size:1.05rem}
+.card p{margin:0;color:var(--sub);font-size:.95rem}
+.ico{width:38px;height:38px;border-radius:10px;background:#e8f1ff;color:var(--blue-d);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px}
+code{background:#eef2f7;border-radius:5px;padding:1px 6px;font-size:.9em}
+pre{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:18px;overflow:auto;font-size:.9rem}
+.alt{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+.shots figure{margin:0}
+.shots .shot{box-shadow:0 8px 24px rgba(15,23,42,.12);border:1px solid var(--line)}
+.shots figcaption{margin-top:8px;color:var(--sub);font-size:.92rem;text-align:center}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.steps li{list-style:none;counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 22px 22px 66px;position:relative}
+.steps li::before{content:counter(s);position:absolute;left:20px;top:20px;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.steps{padding:0;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.92rem}
+.chip.main{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:700}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600}
+details p{margin:10px 0 0;color:var(--sub)}
+footer{background:#0f172a;color:#cbd5e1;padding:34px 0;font-size:.92rem}
+footer a{color:#93c5fd}
+footer .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+.note{font-size:.88rem;color:var(--sub)}
+.pay{text-align:center}
+.pay img{width:200px;height:200px;object-fit:contain;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px;margin:10px auto}
+.pay .btn{margin-top:6px;background:var(--blue);color:#fff;box-shadow:none}
+.pay .scan{color:var(--sub);font-size:.88rem}
+[hidden]{display:none!important}
+@media(max-width:800px){.hero .wrap{grid-template-columns:1fr}.hero h1{font-size:2rem}nav a.hide{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="img/ai-64.png" alt=""><span>Excel AI Assistant</span></a>
+    <nav>
+      <a class="hide" href="#features" data-i18n="nav.features">Features</a>
+      <a class="hide" href="#screens" data-i18n="nav.screens">Screenshots</a>
+      <a class="hide" href="#start" data-i18n="nav.start">Get started</a>
+      <a class="hide" href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a class="hide" id="nav-support" href="#support" data-i18n="nav.support" hidden>Support</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="ja" aria-pressed="false">日本語</button>
+        <button data-lang="zh" aria-pressed="false">中文</button>
+        <button data-lang="en" aria-pressed="false">English</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1 data-i18n="hero.title">AI, right inside Excel.</h1>
+      <p data-i18n="hero.sub">Use DeepSeek — or OpenAI, Claude and other services — with =AI() formulas, one-click batch processing and a chat pane. Bring your own API key.</p>
+      <a class="btn" href="downloads/ExcelAI-{{VERSION}}.zip" data-i18n="hero.download">Download for Windows</a><a class="btn ghost" href="#start" data-i18n="hero.how">How to install</a>
+      <div class="meta"><span data-i18n="hero.meta">Free &amp; open source (MIT) · Excel 2019 or later (desktop) · 32-bit &amp; 64-bit</span> · v{{VERSION}}</div>
+    </div>
+    <div class="shot"><img data-img="ribbon" src="img/ribbon-en.png" alt="Excel ribbon with the AI tab"></div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <h2 data-i18n="f.title">Everything you need to put AI to work on a spreadsheet</h2>
+    <p class="lead" data-i18n="f.lead">Built for everyday office work: translate, summarize, classify and clean up hundreds of rows without leaving Excel.</p>
+    <div class="grid">
+      <div class="card"><div class="ico">fx</div><h3 data-i18n="f1.t">=AI() formulas</h3><p data-i18n="f1.p">AI, AI_TRANSLATE, AI_SUMMARIZE, AI_CLASSIFY and AI_EXTRACT work like normal functions. Results arrive in the background, so Excel never freezes, and identical inputs are cached.</p></div>
+      <div class="card"><div class="ico">▦</div><h3 data-i18n="f2.t">Process a selection</h3><p data-i18n="f2.p">Pick cells, write one prompt with {{value}}, {{A}} or {{row}}, and run. See the item count and estimated cost first, write results to the right, a column or in place, and resume after a failure.</p></div>
+      <div class="card"><div class="ico">💬</div><h3 data-i18n="f3.t">Chat pane</h3><p data-i18n="f3.p">Ask questions beside your sheet with streaming answers. Attach the selected cells, then insert the answer back into the sheet.</p></div>
+      <div class="card"><div class="ico">⋮</div><h3 data-i18n="f4.t">Right-click menu</h3><p data-i18n="f4.p">“Process with AI…” is right in the cell menu — select, right-click, done.</p></div>
+      <div class="card"><div class="ico">⇄</div><h3 data-i18n="f5.t">Many AI services</h3><p data-i18n="f5.p">DeepSeek by default. Switch to OpenAI, Claude, Qwen, Moonshot, Zhipu, SiliconFlow, OpenRouter, or any OpenAI-compatible URL. Type any model name.</p></div>
+      <div class="card"><div class="ico">🔒</div><h3 data-i18n="f6.t">Your key, your data</h3><p data-i18n="f6.p">Each user enters their own API key, stored encrypted for that Windows account. Cells are sent only to the service you choose — there is no server of ours in between.</p></div>
+      <div class="card"><div class="ico">¥</div><h3 data-i18n="f7.t">Cost under control</h3><p data-i18n="f7.p">Result cache, concurrency limit, automatic retry with back-off, and a monthly usage and cost estimate.</p></div>
+      <div class="card"><div class="ico">文</div><h3 data-i18n="f8.t">日本語 · 中文 · English</h3><p data-i18n="f8.p">The interface follows Excel's language automatically (English for anything else) and can be changed in Settings.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="screens">
+  <div class="wrap">
+    <h2 data-i18n="s.title">Screenshots</h2>
+    <p class="lead" data-i18n="s.lead">The interface in the language you are viewing.</p>
+    <div class="shots">
+      <figure><div class="shot"><img data-img="ctxmenu" src="img/ctxmenu-en.png" alt=""></div><figcaption data-i18n="s.ctx">Right-click menu</figcaption></figure>
+      <figure><div class="shot"><img data-img="process" src="img/process-en.png" alt=""></div><figcaption data-i18n="s.process">Process a selection</figcaption></figure>
+      <figure><div class="shot"><img data-img="settings" src="img/settings-en.png" alt=""></div><figcaption data-i18n="s.settings">Settings: pick the AI service and enter your key</figcaption></figure>
+      <figure><div class="shot"><img data-img="about" src="img/about-en.png" alt=""></div><figcaption data-i18n="s.about">About</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2 data-i18n="g.title">Get started in 3 steps</h2>
+    <p class="lead" data-i18n="g.lead">No administrator rights needed.</p>
+    <ol class="steps">
+      <li><strong data-i18n="g1.t">Download and unzip</strong><br><span class="note" data-i18n="g1.p">Unzip the folder somewhere local. If Windows blocks it, tick “Unblock” in the zip's properties before unzipping.</span></li>
+      <li><strong data-i18n="g2.t">Run Install.cmd</strong><br><span class="note" data-i18n="g2.p">Close Excel, then double-click Install.cmd. It detects 32/64-bit Excel for you.</span></li>
+      <li><strong data-i18n="g3.t">Enter your API key</strong><br><span class="note" data-i18n="g3.p">Open Excel → AI tab → Settings, choose the service (DeepSeek by default), paste your key and press “Test connection”.</span></li>
+    </ol>
+    <p style="margin-top:28px"><a class="btn" style="background:var(--blue);color:#fff" href="downloads/ExcelAI-{{VERSION}}.zip" data-i18n="hero.download">Download for Windows</a>
+    <span class="note">&nbsp; ExcelAI-{{VERSION}}.zip · SHA-256: <code>{{SHA256}}</code></span></p>
+    <h3 style="margin-top:36px" data-i18n="g.try">Try it</h3>
+<pre>=AI("Translate to English:", A2)
+=AI_TRANSLATE(A2, "French")
+=AI_SUMMARIZE(A2)
+=AI_CLASSIFY(A2, "inquiry,complaint,other")
+=AI_EXTRACT(A2, "phone number")</pre>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2 data-i18n="p.title">Works with the service you already use</h2>
+    <div class="chips">
+      <span class="chip main">DeepSeek</span><span class="chip">OpenAI</span><span class="chip">Anthropic Claude</span><span class="chip">Qwen</span><span class="chip">Moonshot (Kimi)</span><span class="chip">Zhipu (GLM)</span><span class="chip">SiliconFlow</span><span class="chip">OpenRouter</span><span class="chip" data-i18n="p.custom">Any OpenAI-compatible URL</span>
+    </div>
+    <p class="note" style="margin-top:14px" data-i18n="p.note">API usage is billed by the service you choose, to your own account. The add-in itself is free.</p>
+  </div>
+</section>
+
+<section class="alt" id="support" hidden>
+  <div class="wrap">
+    <h2 data-i18n="sp.title">Support this project</h2>
+    <p class="lead" data-i18n="sp.lead">Excel AI Assistant is free and open source. If it saves you time, you can support its development with a voluntary contribution.</p>
+    <div class="grid" style="max-width:560px">
+      <div class="card pay" id="pay-paypay" hidden>
+        <h3>PayPay</h3>
+        <img id="qr-paypay" alt="PayPay QR" hidden>
+        <div class="scan" id="scan-paypay" data-i18n="sp.scan.paypay" hidden>Scan with the PayPay app</div>
+        <a class="btn" id="link-paypay" href="#" rel="noopener" data-i18n="sp.paypay.btn" hidden>Support with PayPay</a>
+      </div>
+      <div class="card pay" id="pay-wechat" hidden>
+        <h3 data-i18n="sp.wechat">WeChat Pay</h3>
+        <img id="qr-wechat" alt="WeChat Pay QR">
+        <div class="scan" data-i18n="sp.scan.wechat">Scan with WeChat</div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px" data-i18n="sp.note">Contributions are voluntary, do not unlock any feature and are not a purchase. Questions: contact@nassen.co.jp</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2 data-i18n="q.title">FAQ</h2>
+    <details><summary data-i18n="q1.q">Is it really free?</summary><p data-i18n="q1.a">Yes. The add-in is open source under the MIT license. You only pay the AI service for the API calls you make, using your own key.</p></details>
+    <details><summary data-i18n="q2.q">Where does my data go?</summary><p data-i18n="q2.a">The text of the cells you process and your instructions are sent directly from your PC to the AI service you selected, with your own API key. We run no server and never see your data or your key. The add-in asks for your consent the first time. Do not process confidential or personal data unless your organization allows it.</p></details>
+    <details><summary data-i18n="q3.q">Which Excel versions are supported?</summary><p data-i18n="q3.a">Excel 2019, 2021 and Microsoft 365 desktop on Windows 10/11, 32-bit and 64-bit builds are included. Excel for Mac and Excel on the web are not supported at this time.</p></details>
+    <details><summary data-i18n="q4.q">Is it affiliated with DeepSeek, OpenAI or Anthropic?</summary><p data-i18n="q4.a">No. It is independent software that connects to those services through their public APIs. All product names are trademarks of their respective owners.</p></details>
+    <details><summary data-i18n="q5.q">I don't see the AI tab after installing.</summary><p data-i18n="q5.a">Close every Excel window and open Excel again. If the file was downloaded, unblock the zip (Properties → Unblock) and run Install.cmd again. Logs are in %APPDATA%\ExcelAi\logs (they never contain your key or cell contents).</p></details>
+    <details><summary data-i18n="q6.q">Can I change the interface language?</summary><p data-i18n="q6.a">It follows Excel's language automatically (Japanese, Chinese, English; English for other languages). You can choose a language in Settings, and restart Excel for the ribbon to update.</p></details>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 株式会社ナッセンシステム · <a href="https://nassen.co.jp">nassen.co.jp</a> · <a href="mailto:contact@nassen.co.jp">contact@nassen.co.jp</a></div>
+    <div><span data-i18n="foot.license">Open source under the MIT License</span> · v{{VERSION}}</div>
+  </div>
+</footer>
+
+<script id="sponsor-config" type="application/json">{{SPONSOR_JSON}}</script>
+<script>
+(function(){
+var T={
+ja:{
+"nav.support":"サポート","sp.title":"プロジェクトを支援する（任意）","sp.lead":"Excel AI アシスタントは無料のオープンソースです。お役に立てた場合は、開発を支援していただけると励みになります。","sp.wechat":"WeChat Pay（微信支付）","sp.scan.paypay":"PayPay アプリで読み取ってください","sp.scan.wechat":"WeChat で読み取ってください","sp.paypay.btn":"PayPay で支援する","sp.note":"ご支援は任意で、機能の解放や商品の購入ではありません。ご質問は contact@nassen.co.jp まで。",
+"nav.features":"機能","nav.screens":"画面","nav.start":"使い方","nav.faq":"よくある質問",
+"hero.title":"Excel の中で、AI を。","hero.sub":"DeepSeek を中心に、OpenAI・Claude などの AI を、=AI() 関数・一括処理・チャットで Excel から使えます。API キーはご自身のものを入力します。",
+"hero.download":"Windows 版をダウンロード","hero.how":"インストール方法","hero.meta":"無料・オープンソース（MIT）· Excel 2019 以降（デスクトップ）· 32 / 64 ビット対応",
+"f.title":"表計算で AI を使うための機能をひと通り","f.lead":"翻訳・要約・分類・表記ゆれの整形など、数百行の作業を Excel から離れずに片づけられます。",
+"f1.t":"=AI() 関数","f1.p":"AI・AI_TRANSLATE・AI_SUMMARIZE・AI_CLASSIFY・AI_EXTRACT を普通の関数のように使えます。結果は裏で届くので Excel は固まらず、同じ入力はキャッシュします。",
+"f2.t":"選択範囲を一括処理","f2.p":"セルを選び、{{value}}・{{A}}・{{row}} を使った指示を 1 つ書いて実行。件数と費用の概算を先に確認でき、右隣・指定の列・元のセルに書き込み、失敗しても続きから再開できます。",
+"f3.t":"チャット","f3.p":"シートの横で相談でき、回答は少しずつ表示されます。選択範囲を添付でき、回答はセルに書き戻せます。",
+"f4.t":"右クリックメニュー","f4.p":"セルの右クリックメニューに「AI で処理…」。選んで、右クリックするだけです。",
+"f5.t":"たくさんの AI サービス","f5.p":"既定は DeepSeek。OpenAI・Claude・Qwen・Moonshot・Zhipu・SiliconFlow・OpenRouter、OpenAI 互換の任意の URL にも切り替えられ、モデル名は自由に入力できます。",
+"f6.t":"キーもデータもあなたのもの","f6.p":"API キーは利用者ごとに入力し、その Windows アカウントだけが読める形で暗号化して保存します。セルの内容は選んだサービスにだけ送られ、当社のサーバーは経由しません。",
+"f7.t":"費用を抑える工夫","f7.p":"結果のキャッシュ、同時実行数の制限、混雑時の自動再試行、今月の使用量と費用の概算。",
+"f8.t":"日本語・中文・English","f8.p":"画面は Excel の言語に自動で合わせ（それ以外は English）、設定で変更もできます。",
+"s.title":"画面","s.lead":"いまご覧の言語での画面です。","s.ctx":"右クリックメニュー","s.process":"選択範囲の一括処理","s.settings":"設定：AI サービスの選択とキーの入力","s.about":"バージョン情報",
+"g.title":"3 ステップで始められます","g.lead":"管理者の権限は不要です。",
+"g1.t":"ダウンロードして展開","g1.p":"zip をパソコン内の好きな場所に展開します。ブロックされる場合は、展開の前に zip のプロパティで「許可する」にチェックしてください。",
+"g2.t":"Install.cmd を実行","g2.p":"Excel を閉じて、Install.cmd をダブルクリック。32 / 64 ビットは自動で判定します。",
+"g3.t":"API キーを入力","g3.p":"Excel の [AI] タブ →「設定」でサービス（既定は DeepSeek）を選び、キーを貼り付けて「接続テスト」を押します。",
+"g.try":"試してみる","p.title":"お使いのサービスで使えます","p.custom":"OpenAI 互換の任意の URL","p.note":"API の利用料は、選んだサービスからご自身のアカウントに請求されます。アドイン自体は無料です。",
+"q.title":"よくある質問",
+"q1.q":"本当に無料ですか？","q1.a":"はい。MIT ライセンスのオープンソースです。AI サービスの API 利用料だけが、ご自身のキーで発生します。",
+"q2.q":"データはどこに送られますか？","q2.a":"処理するセルの文字と指示が、お使いのパソコンから、選んだ AI サービスへ、ご自身の API キーで直接送られます。当社はサーバーを持たず、データもキーも見ません。初回に同意の確認があります。組織で許可されていない限り、機密情報・個人情報は処理しないでください。",
+"q3.q":"対応している Excel は？","q3.a":"Windows 10/11 の Excel 2019・2021・Microsoft 365（デスクトップ版）。32 ビット・64 ビットの両方を同梱しています。Mac 版・Web 版の Excel には、現時点では対応していません。",
+"q4.q":"DeepSeek・OpenAI・Anthropic の製品ですか？","q4.a":"いいえ。各社の公開 API に接続する独立したソフトウェアで、各社とは関係ありません。製品名は各社の商標です。",
+"q5.q":"インストールしても [AI] タブが出ません。","q5.a":"Excel をすべて閉じて、開き直してください。ダウンロードしたファイルは zip のプロパティで「許可する」にして、Install.cmd をもう一度実行します。ログは %APPDATA%\\ExcelAi\\logs にあります（キーやセルの内容は書きません）。",
+"q6.q":"表示言語は変えられますか？","q6.a":"Excel の言語に自動で合わせます（日本語・中国語・英語。それ以外は英語）。設定で選ぶこともでき、リボンは Excel の再起動後に切り替わります。",
+"foot.license":"MIT ライセンスのオープンソース"},
+zh:{
+"nav.support":"支持","sp.title":"支持本项目（自愿）","sp.lead":"Excel AI 助手是免费开源软件。如果它帮您节省了时间，欢迎自愿赞助，支持后续开发。","sp.wechat":"微信支付","sp.scan.paypay":"请用 PayPay 应用扫码","sp.scan.wechat":"请用微信扫码","sp.paypay.btn":"用 PayPay 赞助","sp.note":"赞助完全自愿，不会解锁任何功能，也不是商品购买。如有疑问请联系 contact@nassen.co.jp。",
+"nav.features":"功能","nav.screens":"截图","nav.start":"开始使用","nav.faq":"常见问题",
+"hero.title":"在 Excel 里，直接用 AI。","hero.sub":"以 DeepSeek 为主，也支持 OpenAI、Claude 等 AI 服务：=AI() 公式、一键批量处理、聊天窗格。使用您自己的 API 密钥。",
+"hero.download":"下载 Windows 版","hero.how":"如何安装","hero.meta":"免费开源（MIT）· Excel 2019 及以上（桌面版）· 含 32 / 64 位",
+"f.title":"在电子表格里用好 AI，需要的功能都有","f.lead":"翻译、摘要、分类、统一格式……几百行的工作，不用离开 Excel。",
+"f1.t":"=AI() 公式","f1.p":"AI、AI_TRANSLATE、AI_SUMMARIZE、AI_CLASSIFY、AI_EXTRACT 像普通函数一样使用。结果在后台返回，Excel 不会卡住，相同输入会走缓存。",
+"f2.t":"批量处理选中区域","f2.p":"选中单元格，写一条带 {{value}}、{{A}}、{{row}} 的指令即可运行。先看数量和费用估算，可写到右侧、指定列或原单元格，失败后可从断点继续。",
+"f3.t":"聊天窗格","f3.p":"在表格旁边提问，回答逐字显示。可附上选中的单元格，也可把回答写回表格。",
+"f4.t":"右键菜单","f4.p":"单元格右键菜单里有“用 AI 处理…”，选中、右键即可。",
+"f5.t":"多种 AI 服务","f5.p":"默认 DeepSeek，也可切换到 OpenAI、Claude、通义千问、Moonshot、智谱、SiliconFlow、OpenRouter，或任意兼容 OpenAI 的地址。模型名可自由输入。",
+"f6.t":"密钥和数据都归您","f6.p":"每位用户填写自己的 API 密钥，并以仅当前 Windows 账户可读取的方式加密保存。单元格内容只发给您选择的服务，不经过我们的服务器。",
+"f7.t":"控制费用","f7.p":"结果缓存、并发数限制、繁忙时自动重试，以及本月用量和费用估算。",
+"f8.t":"日本語 · 中文 · English","f8.p":"界面自动跟随 Excel 的语言（其他语言用英文），也可在设置中更改。",
+"s.title":"截图","s.lead":"当前语言下的界面。","s.ctx":"右键菜单","s.process":"批量处理选中区域","s.settings":"设置：选择 AI 服务并输入密钥","s.about":"关于",
+"g.title":"3 步开始使用","g.lead":"无需管理员权限。",
+"g1.t":"下载并解压","g1.p":"把 zip 解压到本机任意位置。如被 Windows 阻止，请先在 zip 属性中勾选“解除锁定”再解压。",
+"g2.t":"运行 Install.cmd","g2.p":"关闭 Excel，双击 Install.cmd。会自动判断 32 / 64 位。",
+"g3.t":"输入 API 密钥","g3.p":"打开 Excel 的 [AI] 选项卡 →“设置”，选择服务（默认 DeepSeek），粘贴密钥并点“连接测试”。",
+"g.try":"试一试","p.title":"用您已有的服务","p.custom":"任意兼容 OpenAI 的地址","p.note":"API 费用由您所选的服务向您自己的账户收取。加载项本身免费。",
+"q.title":"常见问题",
+"q1.q":"真的免费吗？","q1.a":"是的。采用 MIT 许可证开源。您只需向 AI 服务支付自己密钥产生的 API 费用。",
+"q2.q":"我的数据会发到哪里？","q2.a":"要处理的单元格文字和您的指令，会用您自己的 API 密钥，从您的电脑直接发送到所选的 AI 服务。我们没有服务器，看不到您的数据和密钥。首次使用时会请您确认同意。除非贵单位允许，请勿处理机密或个人信息。",
+"q3.q":"支持哪些 Excel？","q3.a":"Windows 10/11 上的 Excel 2019、2021 和 Microsoft 365（桌面版），同时包含 32 位和 64 位版本。目前不支持 Mac 版和网页版 Excel。",
+"q4.q":"它是 DeepSeek / OpenAI / Anthropic 的产品吗？","q4.a":"不是。这是通过各家公开 API 连接的独立软件，与各家无关联。产品名称均为各自所有者的商标。",
+"q5.q":"安装后看不到 [AI] 选项卡。","q5.a":"请关闭所有 Excel 窗口后重新打开。如果文件是下载的，请在 zip 属性中“解除锁定”，再运行一次 Install.cmd。日志在 %APPDATA%\\ExcelAi\\logs（不含密钥和单元格内容）。",
+"q6.q":"能更改界面语言吗？","q6.a":"默认自动跟随 Excel 的语言（日语、中文、英语，其他语言用英语）。也可在设置中选择，功能区需重启 Excel 后更新。",
+"foot.license":"MIT 许可证开源"},
+en:{}
+};
+var imgs=["ribbon","ctxmenu","process","settings","about"];
+function pick(){
+  var q=null;try{q=new URLSearchParams(location.search).get("lang")}catch(e){}
+  if(q==="ja"||q==="zh"||q==="en")return q;
+  var saved=null;try{saved=localStorage.getItem("lang")}catch(e){}
+  if(saved&&(saved==="ja"||saved==="zh"||saved==="en"))return saved;
+  var list=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||"en"];
+  var l=(list[0]||"en").toLowerCase().slice(0,2);
+  return l==="ja"||l==="zh"?l:"en";
+}
+var enCache={};
+document.querySelectorAll("[data-i18n]").forEach(function(el){enCache[el.getAttribute("data-i18n")]=el.innerHTML;});
+function apply(lang){
+  document.documentElement.lang=lang==="zh"?"zh-CN":lang;
+  document.querySelectorAll("[data-i18n]").forEach(function(el){
+    var k=el.getAttribute("data-i18n");
+    var v=lang==="en"?enCache[k]:(T[lang][k]);
+    if(v!==undefined)el.innerHTML=v;
+  });
+  document.querySelectorAll("[data-img]").forEach(function(img){img.src="img/"+img.getAttribute("data-img")+"-"+lang+".png";});
+  document.querySelectorAll(".lang button").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-lang")===lang?"true":"false");});
+  var titles={ja:"Excel AI アシスタント — Excel で DeepSeek などの AI を",zh:"Excel AI 助手 — 在 Excel 里使用 DeepSeek 等 AI",en:"Excel AI Assistant — DeepSeek & AI in Excel"};
+  document.title=titles[lang];
+}
+document.querySelectorAll(".lang button").forEach(function(b){b.addEventListener("click",function(){var l=b.getAttribute("data-lang");try{localStorage.setItem("lang",l)}catch(e){}apply(l);});});
+function sponsor(){
+  var cfg={};try{cfg=JSON.parse(document.getElementById("sponsor-config").textContent)||{}}catch(e){}
+  var any=false;
+  function show(id){var el=document.getElementById(id);if(el){el.hidden=false;}}
+  if(cfg.paypayUrl||cfg.paypayQr){
+    any=true;show("pay-paypay");
+    if(cfg.paypayQr){var q=document.getElementById("qr-paypay");q.src=cfg.paypayQr;q.hidden=false;show("scan-paypay");}
+    if(cfg.paypayUrl){var a=document.getElementById("link-paypay");a.href=cfg.paypayUrl;a.hidden=false;}
+  }
+  if(cfg.wechatQr){any=true;show("pay-wechat");document.getElementById("qr-wechat").src=cfg.wechatQr;}
+  if(any){show("support");show("nav-support");}
+}
+sponsor();
+apply(pick());
+})();
+</script>
+</body>
+</html>

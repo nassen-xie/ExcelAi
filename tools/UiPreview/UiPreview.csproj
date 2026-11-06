@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 画面（設定・一括処理・チャット・同意）を Excel なしで描いて PNG にする確認用の道具 -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>UiPreview</RootNamespace>
+    <AssemblyName>UiPreview</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\..\src\ExcelAi.Addin\ExcelAi.Addin.csproj" />
+  </ItemGroup>
+</Project>

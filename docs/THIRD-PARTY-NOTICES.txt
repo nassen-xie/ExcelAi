@@ -1,0 +1,17 @@
+Excel AI アシスタント — Third-party components
+==============================================
+
+This add-in bundles the following open-source components (versions as built; see the NuGet package metadata for the full license texts).
+
+- Excel-DNA (ExcelDna.AddIn / ExcelDna.Integration) 1.9.0 — Zlib license — https://github.com/Excel-DNA/ExcelDna
+- Anthropic .NET SDK (Anthropic) 13.3.0 — Apache-2.0 license — https://github.com/anthropics/anthropic-sdk-csharp
+- Microsoft.Extensions.AI.Abstractions 10.5.1 — MIT license — https://github.com/dotnet/extensions
+- System.Text.Json 10.0.6, System.Text.Encodings.Web, System.IO.Pipelines, System.Net.ServerSentEvents,
+  System.Collections.Immutable, System.Diagnostics.DiagnosticSource, Microsoft.Bcl.AsyncInterfaces,
+  System.Security.Cryptography.ProtectedData 8.0.0 — MIT license — https://github.com/dotnet/runtime
+- System.Memory, System.Buffers, System.Numerics.Vectors, System.Runtime.CompilerServices.Unsafe,
+  System.Threading.Tasks.Extensions — MIT license (.NET libraries)
+
+Excel AI Assistant itself is (c) 2026 株式会社ナッセンシステム (https://nassen.co.jp), MIT License (see LICENSE).
+
+"Claude" and "Anthropic" are trademarks of Anthropic, PBC. This add-in is not affiliated with or endorsed by Anthropic.

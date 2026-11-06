@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Excel AI アシスタントのアドイン定義。依存する DLL もすべて 1 つの .xll にまとめる（Pack="true"）ので、配るのは .xll の 1 ファイルだけ。 -->
+<DnaLibrary Name="Excel AI Assistant" RuntimeVersion="v4.0" xmlns="http://schemas.excel-dna.net/addin/2020/07/dnalibrary">
+  <ExternalLibrary Path="ExcelAi.Addin.dll" ExplicitExports="false" ComServer="true" LoadFromBytes="true" Pack="true" IncludePdb="false" />
+  <Reference Path="ExcelAi.Core.dll" Pack="true" />
+  <Reference Path="Anthropic.dll" Pack="true" />
+  <Reference Path="Microsoft.Bcl.AsyncInterfaces.dll" Pack="true" />
+  <Reference Path="Microsoft.Extensions.AI.Abstractions.dll" Pack="true" />
+  <Reference Path="System.Buffers.dll" Pack="true" />
+  <Reference Path="System.Collections.Immutable.dll" Pack="true" />
+  <Reference Path="System.Diagnostics.DiagnosticSource.dll" Pack="true" />
+  <Reference Path="System.IO.Pipelines.dll" Pack="true" />
+  <Reference Path="System.Memory.dll" Pack="true" />
+  <Reference Path="System.Net.ServerSentEvents.dll" Pack="true" />
+  <Reference Path="System.Numerics.Vectors.dll" Pack="true" />
+  <Reference Path="System.Runtime.CompilerServices.Unsafe.dll" Pack="true" />
+  <Reference Path="System.Security.Cryptography.ProtectedData.dll" Pack="true" />
+  <Reference Path="System.Text.Encodings.Web.dll" Pack="true" />
+  <Reference Path="System.Text.Json.dll" Pack="true" />
+  <Reference Path="System.Threading.Tasks.Extensions.dll" Pack="true" />
+</DnaLibrary>

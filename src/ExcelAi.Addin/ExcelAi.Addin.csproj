@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>ExcelAi.Addin</RootNamespace>
+    <AssemblyName>ExcelAi.Addin</AssemblyName>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <!-- Excel 2019 以上（32 ビット・64 ビット）に対応するため、-AddIn.xll（32）と -AddIn64.xll（64）を作り、1 つのファイルにまとめる -->
+    <ExcelDnaCreate32BitAddIn>true</ExcelDnaCreate32BitAddIn>
+    <ExcelDnaCreate64BitAddIn>true</ExcelDnaCreate64BitAddIn>
+    <RunExcelDnaPack>true</RunExcelDnaPack>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="ExcelDna.AddIn" Version="1.9.*" />
+    <EmbeddedResource Include="../../assets/ai-*.png" LogicalName="ExcelAi.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="../../LICENSE" LogicalName="ExcelAi.LICENSE.txt" />
+    <EmbeddedResource Include="../../docs/THIRD-PARTY-NOTICES.txt" LogicalName="ExcelAi.THIRD-PARTY-NOTICES.txt" />
+    <ProjectReference Include="..\ExcelAi.Core\ExcelAi.Core.csproj" />
+  </ItemGroup>
+</Project>

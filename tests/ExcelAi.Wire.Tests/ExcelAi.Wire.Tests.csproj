@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- アドインと同じ net48 + netstandard2.0 版の SDK で、本物の通信の形（送る内容・受け取り方）を確かめる -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>ExcelAi.Tests</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
+    <PackageReference Include="xunit" Version="2.*" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ExcelAi.Core\ExcelAi.Core.csproj" />
+    <Compile Include="..\ExcelAi.Core.Tests\TempHome.cs" Link="TempHome.cs" />
+    <Compile Include="..\ExcelAi.Core.Tests\FakeAnthropicServer.cs" Link="FakeAnthropicServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

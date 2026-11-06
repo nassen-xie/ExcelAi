@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ExcelAi.Addin/ExcelAi.Addin.csproj" />
+    <Project Path="src/ExcelAi.Core/ExcelAi.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ExcelAi.Core.Tests/ExcelAi.Core.Tests.csproj" />
+    <Project Path="tests/ExcelAi.Wire.Tests/ExcelAi.Wire.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/UiPreview/UiPreview.csproj" />
+  </Folder>
+</Solution>

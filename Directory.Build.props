@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Version>1.2.1</Version>
+    <Company>株式会社ナッセンシステム</Company>
+    <Authors>株式会社ナッセンシステム</Authors>
+    <Copyright>Copyright © 2026 株式会社ナッセンシステム</Copyright>
+    <Product>Excel AI Assistant</Product>
+    <Description>Excel add-in for DeepSeek and other AI services (bring your own API key)</Description>
+    <PackageProjectUrl>https://nassen.co.jp</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
